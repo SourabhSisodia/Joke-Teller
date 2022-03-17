@@ -105,10 +105,22 @@ const VoiceRSS = {
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function test() {
+async function getJokes() {
+  try {
+    const response = await fetch(
+      "https://v2.jokeapi.dev/joke/Programming?type=single"
+    );
+    const data = await response.json();
+    tellMe(data.joke);
+    button.disabled = true;
+  } catch (error) {
+    console.log(error);
+  }
+}
+function tellMe(joke) {
   VoiceRSS.speech({
     key: "5413e58aa3c7404f98cd57b0aefd9084",
-    src: "Hello, world!",
+    src: `${joke}`,
     hl: "en-us",
     v: "Linda",
     r: 0,
@@ -117,4 +129,10 @@ function test() {
     ssml: false,
   });
 }
-test();
+button.onclick = () => {
+  getJokes();
+};
+
+audioElement.onended = () => {
+  button.disabled = false;
+};
